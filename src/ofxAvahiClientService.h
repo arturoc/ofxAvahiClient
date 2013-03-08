@@ -5,8 +5,7 @@
  *      Author: arturo
  */
 
-#ifndef OFXAVAHICLIENT_H_
-#define OFXAVAHICLIENT_H_
+#pragma once
 
 #include <avahi-client/client.h>
 #include <avahi-common/simple-watch.h>
@@ -14,11 +13,11 @@
 #include <avahi-client/lookup.h>
 
 #include "ofConstants.h"
-#include "ofxThread.h"
 #include "ofEvents.h"
+#include "ofThread.h"
 #include "ofxAvahiService.h"
 
-class ofxAvahiClientService: public ofxThread {
+class ofxAvahiClientService : public ofThread {
 public:
 	ofxAvahiClientService();
 	virtual ~ofxAvahiClientService();
@@ -27,7 +26,7 @@ public:
 	// service type should be _type._protocol
 	// ie: an http server should be _http._tcp
 	// osc server: _oscit._udp
-	bool start(string service_name, string type, int port);
+	bool start(const string& service_name, const string& type, int port);
 	void close();
 
 	static string LOG_NAME;
@@ -50,5 +49,3 @@ private:
 	string type;
 	int port;
 };
-
-#endif /* OFXAVAHICLIENT_H_ */
