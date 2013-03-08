@@ -70,7 +70,7 @@ void ofxAvahiClientBrowser::client_cb(AvahiClient *s, AvahiClientState state, of
 	}
 }
 
-bool ofxAvahiClientBrowser::lookup(string type){
+bool ofxAvahiClientBrowser::lookup(const string& type){
 	int err;
 	//struct timeval tv;
 
@@ -80,23 +80,28 @@ bool ofxAvahiClientBrowser::lookup(string type){
 	}
 
 	client = avahi_client_new(avahi_simple_poll_get(poll),(AvahiClientFlags)0,(AvahiClientCallback)&client_cb,this,&err);
+
 	if(!client){
 		ofLogError(LOG_NAME) << "Failed to create avahi client" << avahi_strerror(err);
 		close();
+		return false;
 	}
 
 	avahi_service_browser_new(client,AVAHI_IF_UNSPEC,AVAHI_PROTO_INET,type.c_str(),NULL,(AvahiLookupFlags)0,(AvahiServiceBrowserCallback)service_browser_cb,this);
 
 	startThread(true,false);
+
+	return true;
 }
 
 void ofxAvahiClientBrowser::close(){
-
-    if (client)
+    if (client) {
         avahi_client_free(client);
+    }
 
-    if (poll)
+    if (poll) {
         avahi_simple_poll_free(poll);
+    }
 }
 
 void ofxAvahiClientBrowser::threadedFunction(){

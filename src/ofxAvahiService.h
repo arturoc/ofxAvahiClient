@@ -8,5 +8,4 @@ struct ofxAvahiService{
 	string domain;
 	string ip;
 	int port;
-
 };

@@ -130,7 +130,7 @@ ofxAvahiClientService::~ofxAvahiClientService() {
 	close();
 }
 
-bool ofxAvahiClientService::start(string service_name, string _type, int _port){
+bool ofxAvahiClientService::start(const string& service_name, const string& _type, int _port){
 	name = service_name;
 	type = _type;
 	port = _port;
