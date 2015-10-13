@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 
-#include "ofxAvahiClientService.h"
+#include "ofxAvahiClient.h"
 
 class testApp : public ofBaseApp{
 	public:
