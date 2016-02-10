@@ -4,6 +4,15 @@
 void testApp::setup(){
 	// start a test service
 	service.start("Test Service!", "_http._tcp", 8080);
+  // look for a service
+  browser.lookup("_http._tcp");
+  ofAddListener(browser.serviceNewE, this, &testApp::onService);
+}
+
+//--------------------------------------------------------------
+void testApp::onService(ofxAvahiService &s){
+  ofLogNotice("on service");
+
 }
 
 //--------------------------------------------------------------
