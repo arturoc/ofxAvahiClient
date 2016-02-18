@@ -88,7 +88,7 @@
 # add a runtime path to search for those shared libraries, since they aren't 
 # incorporated directly into the final executable application binary.
 # TODO: should this be a default setting?
-PROJECT_LDFLAGS=-lz -L /lib64 -l avahi-client -lavahi-common
+PROJECT_LDFLAGS = -Wl,-rpath=./libs
 
 ################################################################################
 # PROJECT DEFINES
