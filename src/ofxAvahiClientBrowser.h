@@ -32,6 +32,7 @@ public:
 
 protected:
 	void threadedFunction();
+  static ofMutex mutex;
 
 private:
 	AvahiClient * client;

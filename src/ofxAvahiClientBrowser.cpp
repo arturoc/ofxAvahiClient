@@ -16,6 +16,7 @@
 #include "ofUtils.h"
 
 string ofxAvahiClientBrowser::LOG_NAME = "ofxAvahiClientBrowser";
+ofMutex ofxAvahiClientBrowser::mutex;
 
 
 ofxAvahiClientBrowser::ofxAvahiClientBrowser():
@@ -45,7 +46,9 @@ void ofxAvahiClientBrowser::client_cb(AvahiClient *s, AvahiClientState state, of
 		case AVAHI_CLIENT_FAILURE:
 
 			ofLogError(LOG_NAME) << "Client failure:" << avahi_strerror(avahi_client_errno(browser->client));
+      //ofxAvahiClientBrowser::mutex.lock();
 			avahi_simple_poll_quit(browser->poll);
+      //ofxAvahiClientBrowser::mutex.unlock();
 
 			break;
 
@@ -74,12 +77,17 @@ bool ofxAvahiClientBrowser::lookup(const string& type){
 	int err;
 	//struct timeval tv;
 
-	if (!(poll = avahi_simple_poll_new())) {
+  ofxAvahiClientBrowser::mutex.lock();
+  poll = avahi_simple_poll_new();
+  ofxAvahiClientBrowser::mutex.unlock();
+	if (!(poll)) {
 		ofLogError(LOG_NAME) << "Failed to create simple poll object";
 		return false;
 	}
 
+  ofxAvahiClientBrowser::mutex.lock();
 	client = avahi_client_new(avahi_simple_poll_get(poll),(AvahiClientFlags)0,(AvahiClientCallback)&client_cb,this,&err);
+  ofxAvahiClientBrowser::mutex.unlock();
 
 	if(!client){
 		ofLogError(LOG_NAME) << "Failed to create avahi client" << avahi_strerror(err);
@@ -96,16 +104,22 @@ bool ofxAvahiClientBrowser::lookup(const string& type){
 
 void ofxAvahiClientBrowser::close(){
     if (client) {
+        ofxAvahiClientBrowser::mutex.lock();
         avahi_client_free(client);
+        ofxAvahiClientBrowser::mutex.unlock();
     }
 
     if (poll) {
+        ofxAvahiClientBrowser::mutex.lock();
         avahi_simple_poll_free(poll);
+        ofxAvahiClientBrowser::mutex.unlock();
     }
 }
 
 void ofxAvahiClientBrowser::threadedFunction(){
+  ofxAvahiClientBrowser::mutex.lock();
 	avahi_simple_poll_loop(poll);
+  ofxAvahiClientBrowser::mutex.unlock();
 }
 
 void ofxAvahiClientBrowser::service_resolver_cb(AvahiServiceResolver *r, AvahiIfIndex interface, AvahiProtocol protocol, AvahiResolverEvent event, const char *name, const char *type, const char *domain, const char *host_name, const AvahiAddress *a, uint16_t port, AvahiStringList *txt, AvahiLookupResultFlags flags, ofxAvahiClientBrowser *browser){

@@ -4,6 +4,21 @@
 void testApp::setup(){
 	// start a test service
 	service.start("Test Service!", "_http._tcp", 8080);
+  // look for a service
+  browser.lookup("_http._tcp");
+  ofAddListener(browser.serviceNewE, this, &testApp::onServiceNew);
+  ofAddListener(browser.serviceRemoveE, this, &testApp::onServiceRemove);
+}
+
+//--------------------------------------------------------------
+void testApp::onServiceNew(ofxAvahiService &s){
+  ofLogNotice("Found service:" + s.name + " | " + s.host_name + " | " + s.domain + " | " + s.ip + " | " + ofToString(s.port));
+}
+
+//--------------------------------------------------------------
+void testApp::onServiceRemove(ofxAvahiService &s){
+  ofLogNotice("Service went down:" + s.name + " | " + s.host_name + " | " + s.domain + " | " + s.ip + " | " + ofToString(s.port));
+
 }
 
 //--------------------------------------------------------------
