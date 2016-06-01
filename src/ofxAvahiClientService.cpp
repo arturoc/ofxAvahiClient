@@ -156,7 +156,7 @@ bool ofxAvahiClientService::start(const string& service_name, const string& _typ
         (AvahiTimeoutCallback)&modify_cb,
         this);*/
 
-	startThread(true,false);
+	startThread(true);
 
     return true;
 }

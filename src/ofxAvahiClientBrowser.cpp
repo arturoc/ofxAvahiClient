@@ -97,7 +97,7 @@ bool ofxAvahiClientBrowser::lookup(const string& type){
 
 	avahi_service_browser_new(client,AVAHI_IF_UNSPEC,AVAHI_PROTO_INET,type.c_str(),NULL,(AvahiLookupFlags)0,(AvahiServiceBrowserCallback)service_browser_cb,this);
 
-	startThread(true,false);
+	startThread(true);
 
 	return true;
 }
